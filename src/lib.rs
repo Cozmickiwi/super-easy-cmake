@@ -22,7 +22,7 @@ const MAINCONTENTS: [&str; 6] = [
     "#include <stdio.h>",
     "",
     "int main() {",
-    "    printf(\"hello, world\\n\");",
+    "    printf(\"Hello, world!\\n\");",
     "    return 0;",
     "}",
 ];
@@ -32,8 +32,15 @@ pub fn build_main(name: &str) -> std::io::Result<()> {
     create_dir(name)?;
     set_current_dir(name)?;
     let mut cmakelists = File::create("CMakeLists.txt")?;
+    let exet = format!("add_executable({name} ${{SOURCES}})");
+    let mut tick: usize = 0;
     for line in CMLCONTENTS {
-        writeln!(cmakelists, "{}", line).expect("Could not write to file!");
+        if tick == 9 {
+            writeln!(cmakelists, "{}", &exet).expect("Could not write to file!");
+        } else {
+            writeln!(cmakelists, "{}", line).expect("Could not write to file!");
+        }
+        tick += 1;
     }
     create_dir("src")?;
     set_current_dir("src")?;
